@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { Search, SearchIconWrapper, StyledInputBase } from "../script/ui";
+import {
+  AppBar,
+  Search,
+  SearchIconWrapper,
+  StyledInputBase,
+} from "../script/ui";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
@@ -14,7 +19,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
-const PrimarySearchAppBar = ({ AppBar, open, handleDrawerOpen }) => {
+const Navbar = ({ open, handleDrawerOpen }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
@@ -199,4 +204,4 @@ const PrimarySearchAppBar = ({ AppBar, open, handleDrawerOpen }) => {
     </Box>
   );
 };
-export default PrimarySearchAppBar;
+export default Navbar;
