@@ -1,7 +1,15 @@
 import { DrawerHeader } from "../script/ui";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
+import { Routes, Route, Outlet } from "react-router-dom";
 import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import DirContractor from "./dirContractor";
+import DirCustomer from "./dirCustomer";
+import DirMysa from "./dirMysa";
+import DirOthers from "./dirOthers";
+import Training from "./training";
+import Employee from "./employee";
+import Contractor from "./contractor";
+import Customer from "./customer";
 
 const Content = () => {
   return (
@@ -15,37 +23,28 @@ const Content = () => {
     >
       <DrawerHeader />
       <Container maxWidth="lg">
-        <Typography align="justify" paragraph>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus
-          dolor purus non enim praesent elementum facilisis leo vel. Risus at
-          ultrices mi tempus imperdiet. Semper risus in hendrerit gravida rutrum
-          quisque non tellus. Convallis convallis tellus id interdum velit
-          laoreet id donec ultrices. Odio morbi quis commodo odio aenean sed
-          adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies
-          integer quis. Cursus euismod quis viverra nibh cras. Metus vulputate
-          eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo
-          quis imperdiet massa tincidunt. Cras tincidunt lobortis feugiat
-          vivamus at augue. At augue eget arcu dictum varius duis at consectetur
-          lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa sapien
-          faucibus et molestie ac.
-        </Typography>
-        <Typography align="justify" paragraph>
-          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est
-          ullamcorper eget nulla facilisi etiam dignissim diam. Pulvinar
-          elementum integer enim neque volutpat ac tincidunt. Ornare suspendisse
-          sed nisi lacus sed viverra tellus. Purus sit amet volutpat consequat
-          mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis
-          risus sed vulputate odio. Morbi tincidunt ornare massa eget egestas
-          purus viverra accumsan in. In hendrerit gravida rutrum quisque non
-          tellus orci ac. Pellentesque nec nam aliquam sem et tortor. Habitant
-          morbi tristique senectus et. Adipiscing elit duis tristique
-          sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
-          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
-          posuere sollicitudin aliquam ultrices sagittis orci a.
-        </Typography>
+        <Routes>
+          <Route path="/" element={<Outlet />}>
+            <Route path="directory" element={<Outlet />}>
+              <Route path="mysa" element={<DirMysa />}>
+                <Route path=":id" element={<Employee />} />
+              </Route>
+              <Route path="customer" element={<DirCustomer />}>
+                <Route path=":id" element={<Customer />} />
+              </Route>
+              <Route path="contractor" element={<DirContractor />}>
+                <Route path=":id" element={<Contractor />} />
+              </Route>
+              <Route path="others" element={<DirOthers />}>
+                <Route path=":id" element={<Contractor />} />
+              </Route>
+            </Route>
+            <Route path="training" element={<Training />} />
+          </Route>
+        </Routes>
       </Container>
     </Box>
   );
 };
+
 export default Content;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { DrawerHeader, Drawer } from "../script/ui";
 import { useTheme } from "@mui/material/styles";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -17,7 +17,7 @@ import Collapse from "@mui/material/Collapse";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
-import StorageIcon from "@mui/icons-material/Storage";
+// import StorageIcon from "@mui/icons-material/Storage";
 
 const sidebarList = [
   {
@@ -29,50 +29,38 @@ const sidebarList = [
     icon: <PeopleIcon />,
     children: ["MYSA", "Customer", "Contractor", "Others"],
   },
-  {
-    name: "Migration",
-    icon: <StorageIcon />,
-    children: ["Bahagian", "Pegawai", "Latihan", "Rekod"],
-  },
+  // {
+  //   name: "Migration",
+  //   icon: <StorageIcon />,
+  //   children: ["Bahagian", "Pegawai", "Latihan", "Rekod"],
+  // },
 ];
 
 const Sidebar = ({ open, handleDrawerClose }) => {
   const theme = useTheme();
 
   // Nested Drawer List
-  const [openList, setOpenList] = useState({});
-  const handleClick = (name) => {
-    setOpenList({ ...openList, [name]: !openList[name] });
+  const [openList, setOpenList] = useState(true);
+  const handleClick = () => {
+    setOpenList(!openList);
   };
 
   // Nested Drawer List on Collapsed
-  const [anchorEl, setAnchorEl] = useState({});
-  // const openMenu = Boolean(anchorEl);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const openMenu = Boolean(anchorEl);
 
   // Popup nested drawer list on collapsed
-  const handleOpenMenu = (event, name) => {
-    setAnchorEl({ ...anchorEl, [name]: event.currentTarget });
+  const handleOpenMenu = (event) => {
+    setAnchorEl(event.currentTarget);
   };
 
   const handleCloseMenu = (event) => {
     const { parent, name } = event.target.dataset;
     name && navigate(`/${parent.toLowerCase()}/${name.toLowerCase()}`);
-    setAnchorEl({});
+    setAnchorEl(null);
   };
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const anchorList = sidebarList
-      .filter((list) => list.children)
-      .map((li) => li.name.toLowerCase());
-    // let anchor = {};
-    // anchorList.map((li) => (anchor = { ...anchor, [li]: null }));
-    // setAnchorEl(anchor);
-    setAnchorEl(anchorList.reduce((x, y) => (x = { ...x, [y]: null }), {}));
-    setOpenList(anchorList.reduce((x, y) => (x = { ...x, [y]: false }), {}));
-    // setOpenList()
-  }, []);
 
   return (
     <Drawer variant="permanent" open={open}>
@@ -92,17 +80,17 @@ const Sidebar = ({ open, handleDrawerClose }) => {
             <React.Fragment key={index}>
               <ListItemButton
                 onClick={
-                  !Boolean(anchorEl[list.name.toLowerCase()]) && !open
-                    ? (event) => handleOpenMenu(event, list.name.toLowerCase())
+                  !openMenu && !open
+                    ? handleOpenMenu
                     : open
-                    ? () => handleClick(list.name.toLowerCase())
+                    ? handleClick
                     : null
                 }
               >
                 <Menu
                   id="basic-menu"
-                  anchorEl={anchorEl[list.name.toLowerCase()]}
-                  open={Boolean(anchorEl[list.name.toLowerCase()])}
+                  anchorEl={anchorEl}
+                  open={openMenu}
                   onClose={handleCloseMenu}
                   anchorOrigin={{ vertical: "top", horizontal: "right" }}
                   MenuListProps={{
@@ -122,35 +110,25 @@ const Sidebar = ({ open, handleDrawerClose }) => {
                 </Menu>
                 <ListItemIcon>{list.icon}</ListItemIcon>
                 <ListItemText primary={list.name} />
-                {openList[list.name.toLowerCase()] ? (
-                  <ExpandLess />
-                ) : (
-                  <ExpandMore />
-                )}
+                {openList ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
-              {open && (
-                <Collapse
-                  in={openList[list.name.toLowerCase()]}
-                  timeout="auto"
-                  unmountOnExit
-                >
-                  <List component="div" disablePadding>
-                    {list.children.map((child, idx) => (
-                      <ListItemButton
-                        onClick={() =>
-                          navigate(
-                            `/${list.name.toLowerCase()}/${child.toLowerCase()}`
-                          )
-                        }
-                        key={idx}
-                        sx={{ pl: 11 }}
-                      >
-                        <ListItemText primary={child} />
-                      </ListItemButton>
-                    ))}
-                  </List>
-                </Collapse>
-              )}
+              <Collapse in={openList} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  {list.children.map((child, idx) => (
+                    <ListItemButton
+                      onClick={() =>
+                        navigate(
+                          `/${list.name.toLowerCase()}/${child.toLowerCase()}`
+                        )
+                      }
+                      key={idx}
+                      sx={{ pl: 11 }}
+                    >
+                      <ListItemText primary={child} />
+                    </ListItemButton>
+                  ))}
+                </List>
+              </Collapse>
             </React.Fragment>
           ) : (
             <ListItemButton
